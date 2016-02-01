@@ -232,9 +232,9 @@ unsigned long  current_position[NUM_AXIS] = { 0.0, 0.0, 0.0, 0.0 };
 int time_off =0;
 int time_on =0;
 unsigned long current_Millis = 0;
-unsigned long previousMillis = 0;
+unsigned long previous_Millis = 0;
 bool current_on_off_flag = 0 ; //0 => ON , 1 => OFF
-
+const long interval = 1000;
 
 float add_homing[3]={0,0,0};
 #ifdef DELTA
@@ -438,6 +438,42 @@ void serial_echopair_P(const char *s_P, unsigned long v)
     }
   }
 #endif //!SDSUPPORT
+
+//Asan  2016.2.1
+/*
+int time_off =0;
+int time_on =0;
+unsigned long current_Millis = 0;
+unsigned long previousMillis = 0;
+bool current_on_off_flag = 0 ; //0 => ON , 1 => OFF
+*/
+void time_counter()
+{
+//unsigned long currentMillis = millis();
+  current_Millis = millis();
+  
+  if (current_Millis - previous_Millis >= interval) {
+    // save the last time
+    previous_Millis = current_Millis;
+
+    // if the LED is off turn it on and vice-versa:
+    if (current_on_off_flag == 0) {
+      time_on = time_on + 1;
+      
+      //  current_on_off_flag = 1;
+    } else {
+      //current_on_off_flag = 0;
+      time_off = time_off + 1;
+    }
+
+    
+  }
+  if (current_Millis - previous_Millis < 0 ) {
+    current_Millis = previous_Millis;
+  }
+     
+  
+}
 
 //adds an command to the main command buffer
 //thats really done in a non-safe way.
