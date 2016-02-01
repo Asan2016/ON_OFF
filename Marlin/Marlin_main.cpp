@@ -228,6 +228,13 @@ float volumetric_multiplier[EXTRUDERS] = {1.0
 //float current_position[NUM_AXIS] = { 0.0, 0.0, 0.0, 0.0 };
 unsigned long  current_position[NUM_AXIS] = { 0.0, 0.0, 0.0, 0.0 };
 
+//Asan 2016.2.1
+int time_off =0;
+int time_on =0;
+unsigned long current_Millis = 0;
+unsigned long previousMillis = 0;
+bool current_on_off_flag = 0 ; //0 => ON , 1 => OFF
+
 
 float add_homing[3]={0,0,0};
 #ifdef DELTA
